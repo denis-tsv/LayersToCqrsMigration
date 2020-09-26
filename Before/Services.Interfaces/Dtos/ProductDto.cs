@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Domain;
-
-namespace Services.Interfaces
+﻿namespace Services.Interfaces
 {
     public class ProductDto 
     {

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Domain;
 using Infrastructure.Interfaces;
+using Services.CheckOrder;
 using Services.Interfaces;
 
 namespace Services
@@ -24,6 +25,7 @@ namespace Services
             _currentUserService = currentUserService;
         }
 
+        [CheckOrder]
         public override async Task<OrderDto> GetAsync(int id)
         {
             var order = await _dbContext.Orders.FindAsync(id);

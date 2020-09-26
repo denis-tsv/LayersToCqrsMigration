@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Host.Services;
 using Microsoft.AspNetCore.Mvc;
-using Services;
 using Services.Interfaces;
 
 namespace Host.Controllers
@@ -18,7 +17,7 @@ namespace Host.Controllers
         }
 
         [HttpGet("{id}")]
-        [CheckOrderAsyncActionFilter]
+        //[CheckOrderAsyncActionFilter]
         //[ServiceFilter(typeof(CheckOrderAsyncActionFilter))]
         public async Task<OrderDto> Get(int id)
         {

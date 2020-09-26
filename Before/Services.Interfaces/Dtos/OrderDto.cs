@@ -1,6 +1,4 @@
-﻿using Domain;
-
-namespace Services.Interfaces
+﻿namespace Services.Interfaces
 {
     public class OrderDto 
     {

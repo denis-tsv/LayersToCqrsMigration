@@ -39,6 +39,18 @@ namespace Host
 
             //Application services
             services.AddScoped<IOrderService, OrderService>();
+            //services.AddScoped<IOrderService>(sp =>
+            //{
+            //    var service = sp.GetRequiredService<OrderService>();
+            //    var generator = new ProxyGenerator();
+            //    //var interceptor = sp.GetRequiredService<CheckOrderAsyncInterceptor>();
+            //    var interceptor = sp.GetRequiredService<CheckOrderInterceptor>();
+            //    var proxy = generator.CreateInterfaceProxyWithTargetInterface<IOrderService>(service, interceptor);
+            //    return proxy;
+            //});
+            //services.AddTransient<CheckOrderAsyncInterceptor>();
+            //services.AddTransient<CheckOrderInterceptor>();
+            //services.AddScoped<OrderService>();
             services.AddScoped<IProductService, ProductService>();
 
             if (_currentEnvironment.IsEnvironment("Testing"))
@@ -62,13 +74,13 @@ namespace Host
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseExceptionHandlerMiddleware();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
