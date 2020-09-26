@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Services;
+using Services.CheckOrder;
 using Services.Interfaces;
 
 namespace Host
@@ -39,6 +40,7 @@ namespace Host
 
             //Application services
             services.AddScoped<IOrderService, OrderService>();
+            //services.Decorate<IOrderService, CheckOrderServiceDecorator>();
             //services.AddScoped<IOrderService>(sp =>
             //{
             //    var service = sp.GetRequiredService<OrderService>();

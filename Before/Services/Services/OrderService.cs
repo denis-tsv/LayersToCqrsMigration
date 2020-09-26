@@ -28,16 +28,15 @@ namespace Services
         [CheckOrder]
         public override async Task<OrderDto> GetAsync(int id)
         {
-            var order = await _dbContext.Orders.FindAsync(id);
-            if (order == null) throw new EntityNotFoundException();
-            if (order.UserEmail != _currentUserService.Email) throw new ForbiddenException();
+            var order = await CheckOrderAsync(id);
+
             return _mapper.Map<OrderDto>(order);
         }
 
         public override async Task UpdateAsync(int id, OrderDto dto)
         {
-            if (dto.UserEmail != _currentUserService.Email) throw new ForbiddenException();
-            var order = await _dbContext.Orders.FindAsync(dto.Id);
+            var order = await CheckOrderAsync(id);
+
             _mapper.Map(dto, order);
             await _dbContext.SaveChangesAsync();
 
@@ -48,6 +47,14 @@ namespace Services
         public override Task DeleteAsync(int id)
         {
             throw new NotSupportedException();
+        }
+
+        private async Task<Order> CheckOrderAsync(int id)
+        {
+            var order = await _dbContext.Orders.FindAsync(id);
+            if (order == null) throw new EntityNotFoundException();
+            if (order.UserEmail != _currentUserService.Email) throw new ForbiddenException();
+            return order;
         }
 
         private async Task SendEmailNotificationAsync(Order order)
