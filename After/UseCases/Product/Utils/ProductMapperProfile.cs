@@ -4,9 +4,9 @@ using Services.Interfaces;
 
 namespace Services
 {
-    public class AutoMapperProfile : Profile
+    public class ProductMapperProfile : Profile
     {
-        public AutoMapperProfile()
+        public ProductMapperProfile()
         {
             CreateMap<Product, ProductDto>().ReverseMap();
         }

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
+using UseCases.Product.Queries;
 
 namespace Host.Controllers
 {
@@ -11,17 +13,17 @@ namespace Host.Controllers
     [Route("[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly IProductService _productService;
+        private readonly IMediator _mediator;
 
-        public ProductController(IProductService productService)
+        public ProductController(IMediator mediator)
         {
-            _productService = productService;
+            _mediator = mediator;
         }
 
         [HttpGet("{id}")]
         public Task<ProductDto> Get(int id)
         {
-            return _productService.GetAsync(id);
+            return _mediator.Send(new GetProductQuery {Id = id});
         }
     }
 }

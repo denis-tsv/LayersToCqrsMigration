@@ -56,7 +56,6 @@ namespace Host
             //services.AddTransient<CheckOrderAsyncInterceptor>();
             //services.AddTransient<CheckOrderInterceptor>();
             //services.AddScoped<OrderService>();
-            services.AddScoped<IProductService, ProductService>();
 
             if (_currentEnvironment.IsEnvironment("Testing"))
             {
@@ -69,7 +68,7 @@ namespace Host
                     options.UseSqlServer(Configuration.GetConnectionString("Database")));
             }
 
-            services.AddAutoMapper(typeof(AutoMapperProfile), typeof(OrderMapperProfile));
+            services.AddAutoMapper(typeof(ProductMapperProfile), typeof(OrderMapperProfile));
             services.AddMediatR(typeof(CreateOrderCommand));
         }
 
