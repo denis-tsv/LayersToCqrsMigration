@@ -35,7 +35,7 @@ namespace UseCases.Order.Commands.UpdateOrder
 
         protected override async Task Handle(UpdateOrderCommand command, CancellationToken cancellationToken)
         {
-            var order = await CheckOrderAsync(command.Id);
+            var order = await _dbContext.Orders.FindAsync(command.Id);
 
             _mapper.Map(command.Dto, order);
             await _dbContext.SaveChangesAsync();
@@ -48,14 +48,6 @@ namespace UseCases.Order.Commands.UpdateOrder
         private async Task SendEmailNotificationAsync(Domain.Order order)
         {
             await _emailService.SendEmailAsync(order.UserEmail, "Order updated", "Order updated");
-        }
-
-        private async Task<Domain.Order> CheckOrderAsync(int id)
-        {
-            var order = await _dbContext.Orders.FindAsync(id);
-            if (order == null) throw new EntityNotFoundException();
-            if (order.UserEmail != _currentUserService.Email) throw new ForbiddenException();
-            return order;
         }
     }
 }

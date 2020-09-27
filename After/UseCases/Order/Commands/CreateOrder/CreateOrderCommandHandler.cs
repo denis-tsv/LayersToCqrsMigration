@@ -15,17 +15,14 @@ namespace UseCases.Order.Commands.CreateOrder
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, OrderDto>
     {
         private readonly IDbContext _dbContext;
-        private readonly ICurrentUserService _currentUserService;
         private readonly IMapper _mapper;
         private readonly IStatisticService _statisticService;
 
         public CreateOrderCommandHandler(IDbContext dbContext, 
-            ICurrentUserService currentUserService, 
             IMapper mapper,
             IStatisticService statisticService)
         {
             _dbContext = dbContext;
-            _currentUserService = currentUserService;
             _mapper = mapper;
             _statisticService = statisticService;
         }
@@ -38,11 +35,6 @@ namespace UseCases.Order.Commands.CreateOrder
             await _statisticService.SaveAsync("CreateOrder");
 
             return _mapper.Map<OrderDto>(entity);
-        }
-
-        private async Task UpdateOrderStatisticAsync(string userEmail, string eventName)
-        {
-            //Save data for analysis
         }
     }
 }
