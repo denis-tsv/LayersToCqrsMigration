@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Host.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Services;
 using Services.Interfaces;
 
 namespace Host.Controllers
@@ -9,26 +11,24 @@ namespace Host.Controllers
     [Route("[controller]")]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderService _orderService;
+        private readonly IMediator _mediator;
 
-        public OrderController(IOrderService orderService)
+        public OrderController(IMediator mediator)
         {
-            _orderService = orderService;
+            _mediator = mediator;
         }
 
         [HttpGet("{id}")]
-        //[CheckOrderAsyncActionFilter]
-        //[ServiceFilter(typeof(CheckOrderAsyncActionFilter))]
         public async Task<OrderDto> Get(int id)
         {
-            return await _orderService.GetAsync(id);
+            return await _mediator.Send(new GetOrderQuery {Id = id});
         }
 
         [HttpPost("{id}")]
         [CheckOrderAsyncActionFilter]
         public async Task<IActionResult> Update([FromRoute]int id, [FromBody] OrderDto dto)
         {
-            await _orderService.UpdateAsync(id, dto);
+            await _mediator.Send(new UpdateOrderCommand {Id = id, Dto = dto});
 
             return NoContent();
         }

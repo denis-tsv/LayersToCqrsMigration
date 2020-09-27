@@ -8,7 +8,6 @@ namespace Services
     {
         public AutoMapperProfile()
         {
-            CreateMap<Order, OrderDto>().ReverseMap();
             CreateMap<Product, ProductDto>().ReverseMap();
         }
     }

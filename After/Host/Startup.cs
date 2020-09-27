@@ -5,6 +5,7 @@ using DataAccess.MsSql;
 using Host.Services;
 using Infrastructure;
 using Infrastructure.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -42,7 +43,6 @@ namespace Host
             services.AddScoped<CheckOrderAsyncActionFilter>();
 
             //Application services
-            services.AddScoped<IOrderService, OrderService>();
             //services.Decorate<IOrderService, CheckOrderServiceDecorator>();
             //services.AddScoped<IOrderService>(sp =>
             //{
@@ -69,7 +69,8 @@ namespace Host
                     options.UseSqlServer(Configuration.GetConnectionString("Database")));
             }
 
-            services.AddAutoMapper(typeof(AutoMapperProfile));
+            services.AddAutoMapper(typeof(AutoMapperProfile), typeof(OrderMapperProfile));
+            services.AddMediatR(typeof(CreateOrderCommand));
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
