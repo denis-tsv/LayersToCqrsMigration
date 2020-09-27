@@ -23,7 +23,7 @@ namespace UseCases.Product.Queries.GetProduct
         }
         public async Task<ProductDto> Handle(GetProductQuery query, CancellationToken cancellationToken)
         {
-            var entity = await _dbContext.Orders.FindAsync(query.Id);
+            var entity = await _dbContext.Products.FindAsync(query.Id);
             if (entity == null) throw new EntityNotFoundException();
             return _mapper.Map<ProductDto>(entity);
         }

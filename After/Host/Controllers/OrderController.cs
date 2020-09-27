@@ -25,7 +25,6 @@ namespace Host.Controllers
         }
 
         [HttpPost("{id}")]
-        [CheckOrderAsyncActionFilter]
         public async Task<IActionResult> Update([FromRoute]int id, [FromBody] OrderDto dto)
         {
             await _mediator.Send(new UpdateOrderCommand {Id = id, Dto = dto});
