@@ -43,6 +43,9 @@ namespace Services
         {
             var order = await CheckOrderAsync(id);
 
+            var status = await GetOrderStatusAsync(id);
+            if (status == "Delivered") throw new InvalidOperationException();
+
             _mapper.Map(dto, order);
             await _dbContext.SaveChangesAsync();
 
@@ -53,6 +56,12 @@ namespace Services
         public override Task DeleteAsync(int id)
         {
             throw new NotSupportedException();
+        }
+
+        public Task<string> GetOrderStatusAsync(int id)
+        {
+            //Get status from delivery service
+            return Task.FromResult("Delivered");
         }
 
         private async Task<Order> CheckOrderAsync(int id)

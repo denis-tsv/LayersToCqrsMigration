@@ -24,6 +24,12 @@ namespace Host.Controllers
             return await _orderService.GetAsync(id);
         }
 
+        [HttpGet("{id}")]
+        public async Task<string> GetStatus(int id)
+        {
+            return await _orderService.GetOrderStatusAsync(id);
+        }
+
         [HttpPost("{id}")]
         [CheckOrderAsyncActionFilter]
         public async Task<IActionResult> Update([FromRoute]int id, [FromBody] OrderDto dto)

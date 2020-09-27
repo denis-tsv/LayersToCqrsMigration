@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.Interfaces;
+using UseCases.Order.Queries.GetOrderStatus;
 
 namespace Host.Controllers
 {
@@ -22,6 +23,12 @@ namespace Host.Controllers
         public async Task<OrderDto> Get(int id)
         {
             return await _mediator.Send(new GetOrderQuery {Id = id});
+        }
+
+        [HttpGet("{id}")]
+        public Task<string> GetStatus(int id)
+        {
+            return _mediator.Send(new GetOrderStatusRequest {Id = id});
         }
 
         [HttpPost("{id}")]

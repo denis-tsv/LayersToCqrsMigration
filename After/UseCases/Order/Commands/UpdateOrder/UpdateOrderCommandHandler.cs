@@ -9,6 +9,7 @@ using Infrastructure.Interfaces;
 using MediatR;
 using Services;
 using Services.Interfaces;
+using UseCases.Order.Queries.GetOrderStatus;
 
 namespace UseCases.Order.Commands.UpdateOrder
 {
@@ -19,23 +20,29 @@ namespace UseCases.Order.Commands.UpdateOrder
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
         private readonly IStatisticService _statisticService;
+        private readonly IMediator _mediator;
 
         public UpdateOrderCommandHandler(IDbContext dbContext,
             ICurrentUserService currentUserService, 
             IMapper mapper, 
             IEmailService emailService,
-            IStatisticService statisticService)
+            IStatisticService statisticService,
+            IMediator mediator)
         {
             _dbContext = dbContext;
             _currentUserService = currentUserService;
             _mapper = mapper;
             _emailService = emailService;
             _statisticService = statisticService;
+            _mediator = mediator;
         }
 
         protected override async Task Handle(UpdateOrderCommand command, CancellationToken cancellationToken)
         {
             var order = await _dbContext.Orders.FindAsync(command.Id);
+
+            var status = await _mediator.Send(new GetOrderStatusRequest {Id = command.Id});
+            if (status == "Delivered") throw new InvalidOperationException();
 
             _mapper.Map(command.Dto, order);
             await _dbContext.SaveChangesAsync();
