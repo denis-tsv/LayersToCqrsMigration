@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using Services.Interfaces;
+using UseCases.Common.Queries.GetEntity;
 using UseCases.Order.Utils;
 
 namespace Services
 {
-    public class GetOrderQuery : IRequest<OrderDto>, ICheckOrderRequest
+    public class GetOrderQuery : GetEntityQuery<OrderDto>, ICheckOrderRequest
     {
-        public int Id { get; set; }
     }
 }
