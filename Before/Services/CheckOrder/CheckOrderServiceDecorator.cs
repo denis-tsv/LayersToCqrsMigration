@@ -45,6 +45,11 @@ namespace Services.CheckOrder
             return _orderService.DeleteAsync(id);
         }
 
+        public Task<string> GetOrderStatusAsync(int id)
+        {
+            return _orderService.GetOrderStatusAsync(id);
+        }
+
         private async Task<Order> CheckOrderAsync(int id)
         {
             var order = await _dbContext.Orders.FindAsync(id);
