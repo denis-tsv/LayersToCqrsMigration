@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ApplicationServices.Interfaces;
 using AutoMapper;
 using Infrastructure.Interfaces;
 using MediatR;
@@ -17,13 +18,19 @@ namespace UseCases.Order.Commands.UpdateOrder
         private readonly ICurrentUserService _currentUserService;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
+        private readonly IStatisticService _statisticService;
 
-        public UpdateOrderCommandHandler(IDbContext dbContext, ICurrentUserService currentUserService, IMapper mapper, IEmailService emailService)
+        public UpdateOrderCommandHandler(IDbContext dbContext,
+            ICurrentUserService currentUserService, 
+            IMapper mapper, 
+            IEmailService emailService,
+            IStatisticService statisticService)
         {
             _dbContext = dbContext;
             _currentUserService = currentUserService;
             _mapper = mapper;
             _emailService = emailService;
+            _statisticService = statisticService;
         }
 
         protected override async Task Handle(UpdateOrderCommand command, CancellationToken cancellationToken)
@@ -34,17 +41,13 @@ namespace UseCases.Order.Commands.UpdateOrder
             await _dbContext.SaveChangesAsync();
 
             await SendEmailNotificationAsync(order);
-            await UpdateOrderStatisticAsync(_currentUserService.Email, "UpdateOrder");
+
+            await _statisticService.SaveAsync("CreateOrder");
         }
 
         private async Task SendEmailNotificationAsync(Domain.Order order)
         {
             await _emailService.SendEmailAsync(order.UserEmail, "Order updated", "Order updated");
-        }
-
-        private async Task UpdateOrderStatisticAsync(string userEmail, string eventName)
-        {
-            //Save data for analysis
         }
 
         private async Task<Domain.Order> CheckOrderAsync(int id)

@@ -1,3 +1,5 @@
+using ApplicationServices;
+using ApplicationServices.Interfaces;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -56,7 +58,7 @@ namespace Host
             //services.AddTransient<CheckOrderAsyncInterceptor>();
             //services.AddTransient<CheckOrderInterceptor>();
             //services.AddScoped<OrderService>();
-
+            services.AddScoped<IStatisticService, StatisticService>();
             if (_currentEnvironment.IsEnvironment("Testing"))
             {
                 services.AddDbContext<IDbContext, AppDbContext>(options =>

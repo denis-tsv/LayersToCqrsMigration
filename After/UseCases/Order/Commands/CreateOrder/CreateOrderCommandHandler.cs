@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ApplicationServices.Interfaces;
 using AutoMapper;
 using Infrastructure.Interfaces;
 using MediatR;
@@ -16,12 +17,17 @@ namespace UseCases.Order.Commands.CreateOrder
         private readonly IDbContext _dbContext;
         private readonly ICurrentUserService _currentUserService;
         private readonly IMapper _mapper;
+        private readonly IStatisticService _statisticService;
 
-        public CreateOrderCommandHandler(IDbContext dbContext, ICurrentUserService currentUserService, IMapper mapper)
+        public CreateOrderCommandHandler(IDbContext dbContext, 
+            ICurrentUserService currentUserService, 
+            IMapper mapper,
+            IStatisticService statisticService)
         {
             _dbContext = dbContext;
             _currentUserService = currentUserService;
             _mapper = mapper;
+            _statisticService = statisticService;
         }
         public async Task<OrderDto> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
         {
@@ -29,7 +35,7 @@ namespace UseCases.Order.Commands.CreateOrder
             _dbContext.Set<Domain.Order>().Add(entity);
             await _dbContext.SaveChangesAsync();
 
-            await UpdateOrderStatisticAsync(_currentUserService.Email, "CreateOrder");
+            await _statisticService.SaveAsync("CreateOrder");
 
             return _mapper.Map<OrderDto>(entity);
         }
