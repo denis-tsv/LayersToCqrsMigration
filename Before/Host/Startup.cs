@@ -1,3 +1,5 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using DataAccess.MsSql;
 using Host.Services;
@@ -26,6 +28,8 @@ namespace Host
         }
 
         public IConfiguration Configuration { get; }
+        public ILifetimeScope AutofacContainer { get; private set; }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -34,7 +38,6 @@ namespace Host
             
             //Infrastructure services
             services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<IStatisticService, StatisticService>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<CheckOrderAsyncActionFilter>();
 
@@ -69,9 +72,16 @@ namespace Host
             services.AddAutoMapper(typeof(AutoMapperProfile));
         }
 
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            //Configure Autofac
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
