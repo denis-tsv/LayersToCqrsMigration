@@ -24,7 +24,7 @@ namespace Host.Controllers
             return await _orderService.GetAsync(id);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}/status")]
         public async Task<string> GetStatus(int id)
         {
             return await _orderService.GetOrderStatusAsync(id);

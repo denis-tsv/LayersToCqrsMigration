@@ -25,7 +25,7 @@ namespace Host.Controllers
             return await _mediator.Send(new GetOrderQuery {Id = id});
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}/status")]
         public Task<string> GetStatus(int id)
         {
             return _mediator.Send(new GetOrderStatusRequest {Id = id});
