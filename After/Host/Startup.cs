@@ -19,6 +19,24 @@ using UseCases.Order.Utils;
 
 namespace Host
 {
+
+    public class DIHelper
+    {
+        public static void ConfigureServices(IServiceCollection services)
+        {
+            //Infrastructure services
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+            //Application services
+            services.AddScoped<IStatisticService, StatisticService>();
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CheckOrderPipelineBehavior<,>));
+
+            services.AddAutoMapper(typeof(ProductMapperProfile), typeof(OrderMapperProfile));
+            services.AddMediatR(typeof(CreateOrderCommand));
+        }
+    }
+
     public class Startup
     {
         private readonly IWebHostEnvironment _currentEnvironment;
@@ -38,27 +56,10 @@ namespace Host
         {
             services.AddControllers();
             
-            //Infrastructure services
-            services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<ICurrentUserService, CurrentUserService>();
-
-            //Application services
-            services.AddScoped<IStatisticService, StatisticService>();
-            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CheckOrderPipelineBehavior<,>));
-
-            if (_currentEnvironment.IsEnvironment("Testing"))
-            {
-                services.AddDbContext<IDbContext, AppDbContext>(options =>
-                    options.UseInMemoryDatabase("TestDb"));
-            }
-            else
-            {
-                services.AddDbContext<IDbContext, AppDbContext>(options =>
+            services.AddDbContext<IDbContext, AppDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("Database")));
-            }
 
-            services.AddAutoMapper(typeof(ProductMapperProfile), typeof(OrderMapperProfile));
-            services.AddMediatR(typeof(CreateOrderCommand));
+            DIHelper.ConfigureServices(services);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
